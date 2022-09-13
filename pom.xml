@@ -76,6 +76,11 @@
                     <layers>
                         <layer>jaxrs-server</layer>
                     </layers>
+                    <image>
+                        <push>true</push>
+                        <registry>quay.io</registry>
+                        <group>${user.name}</group>
+                    </image>
                     <runtime-name>ROOT.war</runtime-name>
                 </configuration>
                 <executions>
@@ -91,7 +96,7 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <systemProperties>
-                        <imageName>${project.artifactId}</imageName>
+                        <imageName>quay.io/${user.name}/${project.artifactId}</imageName>
                     </systemProperties>
                     <includes>
                         <include>**/*IT</include>
