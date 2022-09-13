@@ -5,11 +5,34 @@
 
 ### Build the application
 
-You can build the Web deployment (WAR) with:
+We are using the `package` goal of the `org.wildfly.plugins:wildfly-maven-plugin` to provision WildFly and deploy the WAR on it.
+
+You can build the application:
 
 [source,bash]
 ----
 $ mvn clean package
 ----
 
-At the end of the Maven execution, the war has been created put in the `target` server.
+At the end of the Maven execution, the application (composed of WildFly and the WAR) has been created put in the `target/server` directory.
+
+### Run the application
+
+You can run the application with:
+
+[source,bash]
+----
+$ ./target/server/bin/standalone.sh
+...
+15:22:47,744 INFO  [org.jboss.as] (Controller Boot Thread) WFLYSRV0025: WildFly Full 27.0.0.Alpha5 (WildFly Core 19.0.0.Beta15) started in 5125ms - Started 261 of 358 services (145 services are lazy, passive or on-demand) - Server configuration file in use: standalone.xml
+----
+
+Once the application is started, we can query it with:
+
+[source,bash]
+----
+$ curl "http://localhost:8080/?value=3"
+9
+----
+
+
