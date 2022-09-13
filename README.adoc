@@ -35,4 +35,14 @@ $ curl "http://localhost:8080/?value=3"
 9
 ----
 
+### Test the application
+
+You can test the complete application (WildFly + deployment) using Arquillian.
+Arquillian will manage the application and start it before the integration tests are run with:
+
+[source,bash]
+----
+mvn clean verify
+----
+
 
