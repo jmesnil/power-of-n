@@ -1,0 +1,9 @@
+image:
+  name: quay.io/jmesnil/power-of-n
+build:
+  enabled: false
+deploy:
+  imagePullSecrets:
+    - name: jmesnil-pull-secret
+  route:
+    enabled: false

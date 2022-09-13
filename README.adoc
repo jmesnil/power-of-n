@@ -45,12 +45,13 @@ Arquillian will manage the application and start it before the integration tests
 mvn clean verify
 ----
 
-### Build the application image
+### Build and Push the Application Image
 
 We are using the `image` goal of the `org.wildfly.plugins:wildfly-maven-plugin` to create a container image that contains the application (WildFly + WAR)
 This goal relies on a Docker binary (`docker` by default or `podman`) to perform the image commands.
+We have modified the `<wildfly-maven-plugin` configuration to push the application image to quay.io.
 
-We can build the application image:
+We can now build and push the application image with:
 
 [source,bash]
 ----
@@ -58,11 +59,10 @@ $ mvn clean package
 ...
 [INFO] --- wildfly-maven-plugin:4.0.0.Beta4-SNAPSHOT:image (default) @ wildfly-demo ---
 ...
-Successfully built application image wildfly-demo:latest
+[INFO] Successfully built application image quay.io/jmesnil/wildfly-demo:latest
 ...
+[INFO] Successfully pushed application image quay.io/jmesnil/wildfly-demo:latest
 ----
-
-At the end of the Maven execution, the application image has been built with the name wildfly-demo:latest.
 
 ### Run the application image
 
@@ -70,7 +70,7 @@ We can run the application image with:
 
 [source,bash]
 ----
-$ docker run -p 8080:8080 wildfly-demo:latest
+$ docker run -p 8080:8080 quay.io/jmesnil/wildfly-demo:latest
 ----
 
 Once the image is started, we can query it with:
@@ -79,4 +79,16 @@ Once the image is started, we can query it with:
 ----
 $ curl "http://localhost:8080/?value=3"
 9
+----
+
+## Deploy on Kubernetes
+
+To deploy a fully functional applicaton on Kubernetes (with healthiness probes, etc.) we can use the Helm Chart for WildFly with
+the specific configuration in a `helm.yaml` file.
+
+We also need to create a secret to be able to pull the image from the private registry at quay.io by following the [Kubernetes documentation](https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod). For this example, the secret is named `quay-pull-secret`.
+
+[source,bash]
+----
+$ helm install power-of-n -f helm.yaml ~/Developer/wildfly-charts/charts/wildfly
 ----
