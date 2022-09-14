@@ -24,37 +24,41 @@ package net.jmesnil.demo;
 import static org.junit.Assert.assertEquals;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
-import jakarta.ws.rs.client.Invocation;
 import jakarta.ws.rs.core.Response;
-import org.jboss.arquillian.container.test.api.RunAsClient;
-import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.as.arquillian.api.ContainerResource;
-import org.jboss.as.arquillian.container.ManagementClient;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.DockerImageName;
 
-@RunWith(Arquillian.class)
-@RunAsClient
 public class PowerOfN_IT {
 
-    @ContainerResource
-    private ManagementClient managementClient;
+    private static DockerImageName imageName = DockerImageName.parse(System.getProperty("imageName"));
 
-    protected URI getHTTPEndpoint() {
-        return managementClient.getWebUri();
+    @Rule
+    public GenericContainer server = new GenericContainer(imageName)
+            .withExposedPorts(8080);
+
+    private URI endpoint;
+
+    @Before
+    public void setUp() throws URISyntaxException {
+        String address = server.getHost();
+        Integer port = server.getFirstMappedPort();
+
+        endpoint = new URI("http://" + address + ":" + port + "/");
     }
 
     @Test
     public void testZero() {
-
         Client client = ClientBuilder.newClient();
         try {
             Response response = client
-                    .target(getHTTPEndpoint())
-                    .path("/")
+                    .target(endpoint)
                     .queryParam("value", 0)
                     .request()
                     .get();
@@ -73,7 +77,7 @@ public class PowerOfN_IT {
         Client client = ClientBuilder.newClient();
         try {
             Response response = client
-                    .target(getHTTPEndpoint())
+                    .target(endpoint)
                     .path("/")
                     .queryParam("value", 3)
                     .request()
@@ -92,7 +96,7 @@ public class PowerOfN_IT {
         Client client = ClientBuilder.newClient();
         try {
             Response response = client
-                    .target(getHTTPEndpoint())
+                    .target(endpoint)
                     .path("/")
                     .queryParam("value", "this is not a long")
                     .request()
