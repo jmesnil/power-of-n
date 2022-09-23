@@ -134,6 +134,7 @@
                     <plugin>
                         <groupId>org.wildfly.plugins</groupId>
                         <artifactId>wildfly-jar-maven-plugin</artifactId>
+                        <version>8.0.0.Final</version>
                         <configuration>
                             <feature-packs>
                                 <feature-pack>
@@ -156,6 +157,7 @@
                     <plugin>
                         <groupId>org.eclipse.jkube</groupId>
                         <artifactId>kubernetes-maven-plugin</artifactId>
+                        <version>1.9.1</version>
                         <executions>
                             <execution>
                                 <goals>
