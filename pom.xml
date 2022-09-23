@@ -85,6 +85,9 @@
     <profiles>
         <profile>
             <id>wildfly</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
