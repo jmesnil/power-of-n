@@ -92,3 +92,30 @@ We also need to create a secret to be able to pull the image from the private re
 ----
 $ helm install power-of-n -f helm.yaml ~/Developer/wildfly-charts/charts/wildfly
 ----
+
+## Alternative deployment on Kubernetes for Bootable JAR
+
+In addition to the Helm Chart for WildFly, the application can be deployed using Maven in 2 ways:
+
+### Using raw Kubernetes JKube generated resources
+
+[source,bash]
+----
+$ mvn k8s:deploy -Pbootable-jar
+----
+
+### Using JKube generated Helm Chart
+
+NB: This helm Chart is specific to this application and un-related to Helm Charts for WildFly.
+
+[source,bash]
+----
+$ mvn package k8s:helm -Pbootable-jar
+----
+
+Then install the generated Helm Chart in Kubernetes:
+
+[source,bash]
+----
+$ helm install power-of-n target/jkube/helm/power-of-n/kubernetes/
+----
